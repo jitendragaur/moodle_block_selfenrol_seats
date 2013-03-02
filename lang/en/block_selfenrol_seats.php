@@ -29,4 +29,6 @@ $string['blocktitledefault']   = 'Seats availability';
 $string['blockcontent']   = 'Block Content';
 $string['blockcontentdefault']   = '[[coursename]] total seats [[total_seats]] and remaining seats [[remaining_seats]]';
 $string['unlimited']   = 'UNLIMITED';
-$string['enableselfenroll']   = 'Please enable self enroll';
+$string['enableselfenroll']   = 'Please enable/select self enroll';
+$string['hide_block_header']   = 'Hide block header';
+$string['selfenrol_instance']   = 'Selfenrol instance';

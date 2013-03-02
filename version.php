@@ -25,6 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2012121200;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2013030200;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2011112900;        // Requires this Moodle version (This is the release version for Moodle 2.0)
 $plugin->component = 'block_selfenrol_seats'; // Full name of the plugin (used for diagnostics)

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -22,7 +23,6 @@
  * @copyright  2012 Jitendra Gaur (jitendra.gaur@me.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 class block_selfenrol_seats extends block_base {
@@ -36,20 +36,28 @@ class block_selfenrol_seats extends block_base {
     }
 
     public function has_config() {
-        return false;
+        return true;
     }
 
-    function hide_header() {              
-        return $this->config->title == '' ? TRUE : FALSE;       
+    function instance_allow_config() {
+        return true;
+    }
+
+    function hide_header() {
+        if (empty($this->config->hide_block_header)) {
+            return false;
+        } else {
+            return $this->config->hide_block_header;
+        }
     }
 
     public function applicable_formats() {
         return array(
-                'site-index' => false,
-                'course-view' => true,
-                'course-view-social' => false,
-                'mod' => false,
-                'mod-quiz' => false
+            'site-index' => false,
+            'course-view' => true,
+            'course-view-social' => false,
+            'mod' => false,
+            'mod-quiz' => false
         );
     }
 
@@ -76,25 +84,26 @@ class block_selfenrol_seats extends block_base {
 
         $course = $this->page->course;
         //get one enable selferol instance from the course
-        if($result = $DB->get_record('enrol', array('courseid'=>$course->id,'enrol'=>'self','status'=>0))) {
+        if ($result = $DB->get_record('enrol', array('courseid' => $course->id,
+            'enrol' => 'self', 'status' => 0, 'id' => $this->config->selfenrol_instance))) {
 
-            $total_seats = ($result->customint3 > 0) ? (int)$result->customint3 : get_string('unlimited', 'block_selfenrol_seats');
-            $total_enrolled_users = $DB->count_records('user_enrolments', array('enrolid'=>$result->id)) ;
+            $total_seats = ($result->customint3 > 0) ? (int) $result->customint3 : get_string('unlimited', 'block_selfenrol_seats');
+            $total_enrolled_users = $DB->count_records('user_enrolments', array('enrolid' => $result->id));
             $remaining_seats = $total_seats - $total_enrolled_users;
 
             //replace coursename
-            $content = preg_replace('/\[\[coursename\]\]/',format_string($course->fullname), $this->config->content);
+            $content = preg_replace('/\[\[coursename\]\]/', format_string($course->fullname), $this->config->content);
             //replace totalseats
-            $content = preg_replace('/\[\[total_seats\]\]/',$total_seats, $content);
-            
+            $content = preg_replace('/\[\[total_seats\]\]/', $total_seats, $content);
+
             //replace total_users
             //replace remaining_seats            
-            if(gettype($total_seats) == 'string'){
-                $content = preg_replace('/\[\[remaining_seats\]\]/',$total_seats, $content);
-            }else{
-                $content = preg_replace('/\[\[remaining_seats\]\]/',$remaining_seats, $content);
+            if (gettype($total_seats) == 'string') {
+                $content = preg_replace('/\[\[remaining_seats\]\]/', $total_seats, $content);
+            } else {
+                $content = preg_replace('/\[\[remaining_seats\]\]/', $remaining_seats, $content);
             }
-        }else {
+        } else {
             $content = get_string('enableselfenroll', 'block_selfenrol_seats');
         }
         $this->content->text = $content;
